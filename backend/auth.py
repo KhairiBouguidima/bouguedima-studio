@@ -66,7 +66,7 @@ def ensure_default_admin():
     default_hash = os.environ.get("ADMIN_PASSWORD_HASH")
     if not default_hash:
         # Fallback to hardcoded admin if not in .env (should not happen based on .env)
-        default_hash = pwd_context.hash("bouguedima2026")
+        default_hash = pwd_context.hash("admin")
         
     with db_cursor() as cur:
         # Just update the admin user if it exists, or insert if it doesn't
