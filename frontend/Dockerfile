@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build
 
 # ===== Stage 2: Production server =====
-FROM nginx:1.27-alpine
+FROM nginx:1.31-alpine
 
 # OCI Image Labels
 LABEL org.opencontainers.image.title="Bouguedima Studio Frontend" \
