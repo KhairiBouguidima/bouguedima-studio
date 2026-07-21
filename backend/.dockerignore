@@ -1,0 +1,33 @@
+# Ignore git and GitHub files
+.git
+.github
+.gitignore
+
+# Ignore local virtual environments and caches
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Ignore local environment variables and databases
+.env
+*.db
+*.sqlite3
+server.log
+logs/
+
+# Ignore uploads directory (mounted as volume in compose)
+uploads/
+
+# Ignore developer configs
+.vscode/
+.idea/
+.gitattributes
+README.md
+requirements-dev.txt
