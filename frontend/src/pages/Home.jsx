@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { API } from '../config'
+import apiClient from '../api/client'
 
 const SLIDES = [
   { bg: '#3a332b' },
@@ -24,9 +24,8 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    fetch(`${API}/services`)
-      .then(r => r.json())
-      .then(setServices)
+    apiClient.get('/services')
+      .then(({ data }) => setServices(data))
       .catch(() => {})
   }, [])
 

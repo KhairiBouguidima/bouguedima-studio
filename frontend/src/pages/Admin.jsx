@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { API, assetUrl } from '../config'
-const TOKEN_KEY = 'studio_token'
+import apiClient, { apiErrorMessage, clearToken, getToken, setToken as saveToken } from '../api/client'
+import { assetUrl } from '../config'
 
 const STATUS_COLORS = {
   'Lead':        { bg: 'rgba(167,130,78,.15)', color: '#A7824E' },
@@ -28,7 +28,7 @@ function FormField({ label, children }) {
 
 export default function Admin() {
   const navigate = useNavigate()
-  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || '')
+  const [token, setToken] = useState(() => getToken())
   const [tab, setTab] = useState('leads')
   const [leads, setLeads] = useState([])
   const [projects, setProjects] = useState([])
@@ -45,24 +45,19 @@ export default function Admin() {
   const [categoryModal, setCategoryModal] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
 
-  const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
-
   const apiCall = async (path, options = {}) => {
-    const r = await fetch(`${API}${path}`, { ...options, headers: { ...headers, ...options.headers } })
-    if (!r.ok) {
-      const err = await r.json().catch(() => ({}))
-      throw new Error(err.detail || 'حدث خطأ')
-    }
-    if (r.status === 204 || options.method === 'DELETE') {
-      const text = await r.text()
-      return text ? JSON.parse(text) : { ok: true }
-    }
-    return r.json()
+    const { data } = await apiClient.request({
+      url: path,
+      method: options.method || 'GET',
+      data: options.body ? JSON.parse(options.body) : undefined,
+      headers: options.headers,
+    })
+    return data || { ok: true }
   }
 
   useEffect(() => {
     if (!token) return
-    fetch(`${API}/auth/me`, { headers }).catch(() => { setToken(''); localStorage.removeItem(TOKEN_KEY) })
+    apiClient.get('/auth/me').catch(() => { setToken(''); clearToken() })
   }, [token])
 
   useEffect(() => {
@@ -88,14 +83,11 @@ export default function Admin() {
   const login = async () => {
     setLoginErr('')
     try {
-      const r = await fetch(`${API}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(creds) })
-      if (!r.ok) throw new Error('بيانات غلط')
-      const data = await r.json()
-      localStorage.setItem(TOKEN_KEY, data.token)
+      const { data } = await apiClient.post('/auth/login', creds)
+      saveToken(data.token)
       setToken(data.token)
-    } catch (e) { setLoginErr(e.message) }
+    } catch (e) { setLoginErr(apiErrorMessage(e, 'Invalid username or password')) }
   }
-
   const updateLeadStatus = async (id, status) => {
     const updated = await apiCall(`/leads/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) })
     setLeads(ls => ls.map(l => l.id === id ? updated : l))
@@ -251,7 +243,7 @@ export default function Admin() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <button onClick={() => navigate('/')} style={{ fontSize: 12, color: '#7A6F65', cursor: 'pointer', background: 'none', border: 'none', fontFamily: 'inherit' }}>← الموقع</button>
-            <button onClick={() => { localStorage.removeItem(TOKEN_KEY); setToken('') }} style={{ fontSize: 12, color: '#A7824E', cursor: 'pointer', background: 'none', border: 'none', fontFamily: 'inherit' }}>خروج</button>
+            <button onClick={() => { clearToken(); setToken('') }} style={{ fontSize: 12, color: '#A7824E', cursor: 'pointer', background: 'none', border: 'none', fontFamily: 'inherit' }}>خروج</button>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { API } from '../config'
+import apiClient from '../api/client'
 
 export default function Portfolio() {
   const [projects, setProjects] = useState([])
@@ -10,8 +10,8 @@ export default function Portfolio() {
   const [selected, setSelected] = useState(null)
 
   useEffect(() => {
-    fetch(`${API}/projects`).then(r => r.json()).then(setProjects).catch(() => {})
-    fetch(`${API}/categories`).then(r => r.json()).then(data => {
+    apiClient.get('/projects').then(({ data }) => setProjects(data)).catch(() => {})
+    apiClient.get('/categories').then(({ data }) => {
       setCategories([{id: 0, name: 'الكل'}, ...data])
     }).catch(() => {})
   }, [])

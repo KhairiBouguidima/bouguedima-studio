@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { API } from '../config'
+import apiClient from '../api/client'
 const TONES = [
   { name: 'عاجي', tone: '#F5ECD7' },
   { name: 'رمادي دافئ', tone: '#C4BBAF' },
@@ -29,9 +29,8 @@ export default function Quote() {
   }
 
   useEffect(() => {
-    fetch(`${API}/categories`)
-      .then(r => r.json())
-      .then(setCategories)
+    apiClient.get('/categories')
+      .then(({ data }) => setCategories(data))
       .catch(() => {})
   }, [])
 
@@ -49,9 +48,7 @@ export default function Quote() {
       if (selectedFiles.length > 0) {
         const formData = new FormData()
         selectedFiles.forEach(f => formData.append('files', f))
-        const uploadRes = await fetch(`${API}/upload`, { method: 'POST', body: formData })
-        if (!uploadRes.ok) throw new Error('Upload failed')
-        const uploadData = await uploadRes.json()
+        const { data: uploadData } = await apiClient.post('/upload', formData)
         photos_paths = uploadData.paths.join(",")
       }
 
@@ -62,11 +59,7 @@ export default function Quote() {
         budget: estimatedPrice > 0 ? `${estimatedPrice.toLocaleString()} دج` : '—'
       }
 
-      await fetch(`${API}/quotes`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(finalQuote),
-      })
+      await apiClient.post('/quotes', finalQuote)
       setSent(true)
     } catch {
       alert('حصل خطأ، حاول مرة أخرى')

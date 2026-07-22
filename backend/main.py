@@ -26,13 +26,24 @@ app = FastAPI(title="Bouguedima Studio API")
 # Serve the uploads directory statically
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
-allowed_origins = os.environ.get("ALLOWED_ORIGINS", "*").split(",")
+default_allowed_origins = ",".join(
+    [
+        "http://localhost:5173",
+        "https://bouguedima-studio-9438-neon.vercel.app",
+    ]
+)
+allowed_origins = [
+    origin.strip().rstrip("/")
+    for origin in os.environ.get("ALLOWED_ORIGINS", default_allowed_origins).split(",")
+    if origin.strip()
+]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "Accept"],
 )
 
 

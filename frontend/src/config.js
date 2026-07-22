@@ -1,7 +1,7 @@
-const apiRoot = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
+const apiRoot = (import.meta.env.VITE_API_URL || 'https://bouguedima-studio-1.onrender.com').replace(/\/$/, '')
 
-/** API prefix: `/api` locally, `https://api.example.com/api` on Vercel */
-export const API = apiRoot ? `${apiRoot}/api` : '/api'
+/** API prefix: `https://bouguedima-studio-1.onrender.com/api` */
+export const API = `${apiRoot}/api`
 
 /** Origin for static uploads when frontend and backend are on different hosts */
 export const ASSET_BASE = apiRoot || ''
