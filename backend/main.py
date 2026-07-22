@@ -358,7 +358,7 @@ def create_category(body: CategoryCreate, username: str = Depends(require_admin)
         cur.execute("SELECT COALESCE(MAX(sort_order), -1) + 1 AS next_order FROM categories")
         next_order = cur.fetchone()["next_order"]
         cur.execute(
-            "INSERT INTO categories (name, desc, price_per_meter, sort_order) VALUES (%s, %s, %s, %s) RETURNING id",
+            "INSERT INTO categories (name, \"desc\", price_per_meter, sort_order) VALUES (%s, %s, %s, %s) RETURNING id",
             (name, body.desc, body.price_per_meter, next_order)
         )
         new_id = cur.fetchone()["id"]
@@ -386,7 +386,7 @@ def update_category(category_id: int, body: CategoryUpdate, username: str = Depe
         new_price = body.price_per_meter if body.price_per_meter is not None else row["price_per_meter"]
 
         cur.execute(
-            "UPDATE categories SET name = %s, desc = %s, price_per_meter = %s WHERE id = %s",
+            "UPDATE categories SET name = %s, \"desc\" = %s, price_per_meter = %s WHERE id = %s",
             (new_name, new_desc, new_price, category_id)
         )
         cur.execute("SELECT * FROM categories WHERE id = %s", (category_id,))

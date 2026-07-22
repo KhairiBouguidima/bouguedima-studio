@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS services (
 CREATE TABLE IF NOT EXISTS categories (
     id SERIAL PRIMARY KEY,
     name TEXT UNIQUE NOT NULL,
-    desc TEXT NOT NULL DEFAULT '',
+    "desc" TEXT NOT NULL DEFAULT '',
     price_per_meter INTEGER NOT NULL DEFAULT 0,
     sort_order INTEGER NOT NULL DEFAULT 0
 );

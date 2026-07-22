@@ -89,6 +89,6 @@ def seed_if_empty():
         if cur.fetchone()["c"] == 0:
             for i, cat in enumerate(CATEGORIES):
                 cur.execute(
-                    "INSERT INTO categories (name, desc, price_per_meter, sort_order) VALUES (%s, %s, %s, %s)",
+                    "INSERT INTO categories (name, \"desc\", price_per_meter, sort_order) VALUES (%s, %s, %s, %s)",
                     (cat['name'], cat['desc'], cat['price'], i),
                 )
