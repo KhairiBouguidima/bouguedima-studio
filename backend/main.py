@@ -38,10 +38,16 @@ app.add_middleware(
 
 @app.on_event("startup")
 def on_startup():
+    print("STARTUP STEP 1")
+    
     init_db()
-    ensure_default_admin()
-    seed_if_empty()
+    print("init_db OK")
 
+    ensure_default_admin()
+    print("ensure_default_admin OK")
+
+    seed_if_empty()
+    print("seed_if_empty OK")
 
 def relative_when(created_at: str) -> str:
     created = datetime.fromisoformat(created_at)
