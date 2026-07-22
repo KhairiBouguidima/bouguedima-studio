@@ -62,23 +62,49 @@ def require_admin(creds: HTTPAuthorizationCredentials | None = Depends(bearer_sc
 
 
 def ensure_default_admin():
-    default_user = os.environ.get("STUDIO_ADMIN_USER", "admin")
-    default_hash = os.environ.get("ADMIN_PASSWORD_HASH")
-    if not default_hash:
-        # Fallback to hardcoded admin if not in .env (should not happen based on .env)
-        default_hash = pwd_context.hash("admin")
-        
-    with db_cursor() as cur:
-        # Just update the admin user if it exists, or insert if it doesn't
-        cur.execute("SELECT id FROM admin_users WHERE username = %s", (default_user,))
-        existing = cur.fetchone()
-        if existing is None:
+    try:
+        print("ADMIN START")
+
+        default_user = os.environ.get("STUDIO_ADMIN_USER", "admin")
+        default_hash = os.environ.get("ADMIN_PASSWORD_HASH")
+
+        if not default_hash:
+            print("Generating bcrypt hash...")
+            default_hash = pwd_context.hash("admin")
+
+        with db_cursor() as cur:
+            print("Checking admin user...")
             cur.execute(
-                "INSERT INTO admin_users (username, password_hash, salt) VALUES (%s, %s, %s)",
-                (default_user, default_hash, ""),
+                "SELECT id FROM admin_users WHERE username = %s",
+                (default_user,)
             )
-        else:
-            cur.execute(
-                "UPDATE admin_users SET password_hash = %s, salt = '' WHERE username = %s",
-                (default_hash, default_user),
-            )
+
+            existing = cur.fetchone()
+            print("Existing:", existing)
+
+            if existing is None:
+                print("Creating admin...")
+                cur.execute(
+                    """
+                    INSERT INTO admin_users 
+                    (username, password_hash, salt) 
+                    VALUES (%s, %s, %s)
+                    """,
+                    (default_user, default_hash, ""),
+                )
+            else:
+                print("Updating admin...")
+                cur.execute(
+                    """
+                    UPDATE admin_users 
+                    SET password_hash = %s, salt = ''
+                    WHERE username = %s
+                    """,
+                    (default_hash, default_user),
+                )
+
+        print("ADMIN DONE")
+
+    except Exception as e:
+        print("ADMIN ERROR:", repr(e))
+        raise
