@@ -1,5 +1,8 @@
 # دليل النشر — Bouguedima Studio
 
+> **PythonAnywhere:** استعمل [`DEPLOYMENT_PYTHONANYWHERE.md`](DEPLOYMENT_PYTHONANYWHERE.md)  
+> **Oracle Cloud:** الدليل تحت (هذا الملف)
+
 Architecture:
 
 ```text

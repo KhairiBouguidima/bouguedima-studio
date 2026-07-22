@@ -17,10 +17,16 @@ target_metadata = None
 # Retrieve database URL from environment or fallback
 database_url = os.environ.get(
     "DATABASE_URL",
-    "postgresql://postgres:postgres@localhost:5432/studio"
+    "postgresql://studio_r5hv_user:iUdnDCglJ4V0OwLk9TYYsAx70CEHGp6t@dpg-d9g81f4m0tmc73bg033g-a.oregon-postgres.render.com/studio_r5hv"
 )
-config.set_main_option("sqlalchemy.url", database_url)
 
+if database_url.startswith("postgresql://"):
+    database_url = database_url.replace(
+        "postgresql://",
+        "postgresql+psycopg://"
+    )
+
+config.set_main_option("sqlalchemy.url", database_url)
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
     url = config.get_main_option("sqlalchemy.url")
