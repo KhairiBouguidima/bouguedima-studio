@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import apiClient from '../api/client'
+import { assetUrl } from '../config'
 
 export default function Portfolio() {
   const [projects, setProjects] = useState([])
@@ -57,7 +58,7 @@ export default function Portfolio() {
         <div className="masonry">
           {filtered.length > 0 ? filtered.map(p => (
             <div key={p.id} className="masonry-item" onClick={() => setSelected(p)}>
-              <img src={p.img} alt={p.title} loading="lazy" />
+              <img src={assetUrl(p.img)} alt={p.title} loading="lazy" />
               <div className="masonry-caption">
                 <div className="masonry-cat">{p.cat} · {p.sub}</div>
                 <div className="masonry-title">{p.title}</div>
@@ -82,7 +83,7 @@ export default function Portfolio() {
         <div className="modal-bg" onClick={() => setSelected(null)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setSelected(null)}>✕</button>
-            <div className="modal-hero" style={{background:`#3a332b url(${selected.img}) center/cover`}}>
+            <div className="modal-hero" style={{background:`#3a332b url(${assetUrl(selected.img)}) center/cover`}}>
               <div style={{position:'absolute',inset:0,background:'linear-gradient(0deg, rgba(20,16,12,.55), rgba(20,16,12,.05) 45%)'}}/>
               <div style={{position:'absolute',left:30,bottom:26,color:'#F7F2E9'}}>
                 <div style={{fontSize:10,letterSpacing:'.24em',textTransform:'uppercase',color:'#E2CFA9'}}>{selected.cat}</div>

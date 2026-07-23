@@ -106,6 +106,23 @@ export default function Admin() {
     setProjects(ps => ps.map(x => x.id === p.id ? updated : x))
   }
 
+  const handleProjectImageChange = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setActionErr('')
+    try {
+      const formData = new FormData()
+      formData.append('files', file)
+      const { data } = await apiClient.post('/upload', formData)
+      const img = data.paths?.[0] || ''
+      if (img) {
+        setProjectModal(m => ({ ...m, data: { ...m.data, img } }))
+      }
+    } catch (err) {
+      setActionErr(apiErrorMessage(err, 'تعذر رفع الصورة'))
+    }
+  }
+
   const saveProject = async () => {
     setActionErr('')
     try {
@@ -310,7 +327,7 @@ export default function Admin() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 16 }}>
               {projects.map(p => (
                 <div key={p.id} className="admin-card" style={{ padding: 0, overflow: 'hidden' }}>
-                  <div style={{ height: 180, background: `#3a332b url(/${p.img}) center/cover` }}>
+                  <div style={{ height: 180, background: `#3a332b url(${assetUrl(p.img)}) center/cover` }}>
                     <div style={{ height: '100%', background: 'linear-gradient(0deg,rgba(0,0,0,.5),transparent)', display: 'flex', alignItems: 'flex-end', padding: '14px 16px' }}>
                       <div style={{ fontSize: 10, letterSpacing: '.2em', textTransform: 'uppercase', color: '#E2CFA9' }}>{p.cat} · {p.sub}</div>
                     </div>
@@ -546,8 +563,17 @@ export default function Admin() {
               <FormField label="الموقع">
                 <input className="form-input" style={adminInput} value={projectModal.data.loc} onChange={e => setProjectModal(m => ({ ...m, data: { ...m.data, loc: e.target.value } }))} />
               </FormField>
-              <FormField label="مسار الصورة">
-                <input className="form-input" style={adminInput} value={projectModal.data.img} onChange={e => setProjectModal(m => ({ ...m, data: { ...m.data, img: e.target.value } }))} placeholder="assets/gallery-1.jpg" dir="ltr" />
+              <FormField label="الصورة">
+                <label className="form-input" style={{ ...adminInput, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, cursor: 'pointer', minHeight: 54 }}>
+                  <span dir="ltr" style={{ color: projectModal.data.img ? '#EDE7DC' : '#8A8174', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {projectModal.data.img || 'اختار صورة من الجهاز'}
+                  </span>
+                  <span style={{ flexShrink: 0, color: '#A7824E', fontSize: 13 }}>اختيار</span>
+                  <input type="file" accept="image/png, image/jpeg, image/webp" onChange={handleProjectImageChange} style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }} />
+                </label>
+                {projectModal.data.img && (
+                  <div style={{ marginTop: 10, height: 140, borderRadius: 6, background: `#3a332b url(${assetUrl(projectModal.data.img)}) center/cover`, border: '1px solid #4a4238' }} />
+                )}
               </FormField>
               <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#EDE7DC', marginBottom: 24, cursor: 'pointer' }}>
                 <input type="checkbox" checked={projectModal.data.live} onChange={e => setProjectModal(m => ({ ...m, data: { ...m.data, live: e.target.checked } }))} />

@@ -93,7 +93,7 @@ export default function Home() {
 
       {/* ARTISAN */}
       <div className="artisan">
-        <div className="artisan-img" style={{backgroundImage:'url(/assets/hero-2.jpg)'}}>
+        <div className="artisan-img" style={{backgroundImage:'url(/assets/worker.jpg)'}}>
           <div className="artisan-img-overlay" />
         </div>
         <div>
@@ -147,7 +147,7 @@ export default function Home() {
           <h2 className="section-h2">اسحب باش تشوف التشطيب.</h2>
         </div>
         <div className="ba-container">
-          <div className="ba-before" style={{backgroundImage:'url(/assets/gallery-1.jpg)',filter:'grayscale(60%)'}}/>
+          <div className="ba-before" style={{backgroundImage:'url(/assets/before.jpeg)',filter:'grayscale(60%)'}}/>
           <div
             className="ba-after"
             style={{

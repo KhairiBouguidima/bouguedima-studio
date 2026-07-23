@@ -24,6 +24,7 @@ from seed_data import seed_if_empty
 app = FastAPI(title="Bouguedima Studio API")
 
 # Serve the uploads directory statically
+os.makedirs("uploads", exist_ok=True)
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 default_allowed_origins = ",".join(
