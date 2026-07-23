@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 
-const WHATSAPP_URL = 'https://wa.me/21350756444'
+const WHATSAPP_URL = 'https://wa.me/+21650756444'
 const TIKTOK_URL = 'https://www.tiktok.com/@bouguedima'
 
 export default function Footer() {
@@ -21,8 +21,8 @@ export default function Footer() {
         </div>
         <div>
           <div style={{fontSize:11,letterSpacing:'.2em',textTransform:'uppercase',color:'#A7824E',marginBottom:16}}>تواصل</div>
-          <a className="link-text" href={WHATSAPP_URL} target="_blank" rel="noreferrer" dir="ltr">05 07 56 44 44</a>
-          <a className="link-text" href={TIKTOK_URL} target="_blank" rel="noreferrer">TikTok</a>
+          <a className="link-text" href={WHATSAPP_URL} target="_blank" rel="noreferrer" dir="ltr">me in Whatsup</a>
+          <a className="link-text" href={TIKTOK_URL} target="_blank" rel="noreferrer">me in TikTok</a>
           <span className="link-text">سطيف · الجزائر</span>
         </div>
         <div>
