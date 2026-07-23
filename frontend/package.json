@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "predev": "node scripts/generate-feeds-manifest.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/generate-feeds-manifest.mjs",
     "build": "vite build",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --check .",

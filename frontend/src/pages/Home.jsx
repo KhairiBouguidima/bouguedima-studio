@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import apiClient from '../api/client'
 
-const SLIDES = [
+const DEFAULT_SLIDES = [
   { bg: '#3a332b' },
   { bg: '#4a3e30' },
   { bg: '#2e2820' },
@@ -15,12 +15,25 @@ const DISCIPLINES = ['ماربورينو', 'ميكروسمنت', 'تادلاكت
 export default function Home() {
   const navigate = useNavigate()
   const [slide, setSlide] = useState(0)
+  const [heroSlides, setHeroSlides] = useState(DEFAULT_SLIDES)
   const [ba, setBa] = useState(50)
   const [services, setServices] = useState([])
 
   useEffect(() => {
-    const t = setInterval(() => setSlide(s => (s + 1) % SLIDES.length), 5000)
+    const t = setInterval(() => setSlide(s => (s + 1) % heroSlides.length), 5000)
     return () => clearInterval(t)
+  }, [heroSlides.length])
+
+  useEffect(() => {
+    fetch('/assets/feeds/manifest.json')
+      .then(res => res.ok ? res.json() : [])
+      .then(paths => {
+        if (Array.isArray(paths) && paths.length > 0) {
+          setHeroSlides(paths.map(path => ({ bg: `#3a332b url(${path}) center/cover` })))
+          setSlide(0)
+        }
+      })
+      .catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -36,7 +49,7 @@ export default function Home() {
 
       {/* HERO */}
       <div className="hero">
-        {SLIDES.map((s, i) => (
+        {heroSlides.map((s, i) => (
           <div
             key={i}
             className="hero-slide"
@@ -60,7 +73,7 @@ export default function Home() {
               <button className="btn-outline" onClick={() => navigate('/portfolio')}>شوف خدمتنا</button>
             </div>
             <div className="hero-dots">
-              {SLIDES.map((_, i) => (
+              {heroSlides.map((_, i) => (
                 <div
                   key={i}
                   onClick={() => setSlide(i)}
@@ -93,7 +106,7 @@ export default function Home() {
 
       {/* ARTISAN */}
       <div className="artisan">
-        <div className="artisan-img" style={{backgroundImage:'url(/assets/worker.jpg)'}}>
+        <div className="artisan-img" style={{backgroundImage:'url(/assets/working.jpg)'}}>
           <div className="artisan-img-overlay" />
         </div>
         <div>
