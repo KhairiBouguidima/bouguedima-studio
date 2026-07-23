@@ -5,9 +5,9 @@ import Footer from '../components/Footer'
 import apiClient from '../api/client'
 
 const DEFAULT_SLIDES = [
-  { bg: '#3a332b' },
-  { bg: '#4a3e30' },
-  { bg: '#2e2820' },
+  { color: '#3a332b' },
+  { color: '#4a3e30' },
+  { color: '#2e2820' },
 ]
 
 const DISCIPLINES = ['ماربورينو', 'ميكروسمنت', 'تادلاكت', 'كرانيش', 'ترافرتين', 'واجهات']
@@ -29,7 +29,7 @@ export default function Home() {
       .then(res => res.ok ? res.json() : [])
       .then(paths => {
         if (Array.isArray(paths) && paths.length > 0) {
-          setHeroSlides(paths.map(path => ({ bg: `#3a332b url(${path}) center/cover` })))
+          setHeroSlides(paths.map(path => ({ image: path, color: '#3a332b' })))
           setSlide(0)
         }
       })
@@ -53,7 +53,11 @@ export default function Home() {
           <div
             key={i}
             className="hero-slide"
-            style={{ background: s.bg, opacity: i === slide ? 1 : 0 }}
+            style={{
+              backgroundColor: s.color,
+              backgroundImage: s.image ? `url("${s.image}")` : undefined,
+              opacity: i === slide ? 1 : 0,
+            }}
           />
         ))}
         <div className="hero-overlay-radial" />

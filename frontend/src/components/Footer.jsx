@@ -23,7 +23,7 @@ export default function Footer() {
           <div style={{fontSize:11,letterSpacing:'.2em',textTransform:'uppercase',color:'#A7824E',marginBottom:16}}>تواصل</div>
           <a className="link-text" href={WHATSAPP_URL} target="_blank" rel="noreferrer" dir="ltr">me in Whatsup</a>
           <a className="link-text" href={TIKTOK_URL} target="_blank" rel="noreferrer">me in TikTok</a>
-          <span className="link-text">سطيف · الجزائر</span>
+          <span className="link-text">Mednine · Tunis</span>
         </div>
         <div>
           <div style={{fontSize:11,letterSpacing:'.2em',textTransform:'uppercase',color:'#A7824E',marginBottom:16}}>أوقات العمل</div>

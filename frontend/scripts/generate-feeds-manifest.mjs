@@ -16,6 +16,6 @@ try {
 const images = files
   .filter((file) => imagePattern.test(file))
   .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
-  .map((file) => `/assets/feeds/${file}`)
+  .map((file) => `/assets/feeds/${encodeURIComponent(file)}`)
 
 await writeFile(manifestPath, `${JSON.stringify(images, null, 2)}\n`)
